@@ -1,0 +1,13 @@
+galaxy_info:
+  author: mats116
+  description: "Nginx installer"
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+  galaxy_tags:
+    - web
+    - nginx
+dependencies: []

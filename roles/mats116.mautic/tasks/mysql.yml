@@ -1,0 +1,26 @@
+- name: install python-mysqldb
+  apt:
+    name: python-mysqldb
+    state: latest
+    force: yes
+
+- name: modify ~/.my.cnf
+  template:
+    src: mysql/my.cnf
+    dest: ~/.my.cnf
+    mode: 0600
+  when: "mautic_mysql_host != 'localhost'"
+
+- name: modify mysql database
+  mysql_db:
+    login_host: "{{ mautic_mysql_host }}"
+    name: "{{ mautic_mysql_database }}"
+    state: present
+
+- name: modify mysql user
+  mysql_user:
+    host: "{{ mautic_mysql_host }}"
+    name: "{{ mautic_mysql_user }}"
+    password: "{{ mautic_mysql_password }}"
+    priv: "{{ mautic_mysql_database }}.*:ALL"
+    state: present

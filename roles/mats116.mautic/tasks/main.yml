@@ -1,0 +1,50 @@
+- name: install requiremnts
+  apt:
+    name: "{{ item }}"
+    state: present
+    force: yes
+  with_items:
+    - unzip
+    - git
+    - php5.6-curl
+    - php5.6-mcrypt
+    - php5.6-imap
+    - php5.6-intl
+
+- name: download mautic
+  get_url:
+    url: "https://github.com/mautic/mautic/archive/{{ mautic_version }}.zip"
+    dest: "/usr/local/src/mautic-{{ mautic_version }}.zip"
+
+- name: unzip mautic
+  unarchive:
+    src: "/usr/local/src/mautic-{{ mautic_version }}.zip"
+    dest: "/usr/share/nginx"
+    creates: "/usr/share/nginx/mautic-{{ mautic_version }}"
+    owner: nginx
+    group: nginx
+    copy: no
+
+- name: modify github access token  
+  command: "composer config --global github-oauth.github.com {{ composer_github_token }}"
+  args:
+    creates: ~/.composer/auth.json
+
+- name: composer install
+  command: "composer install"
+  args:
+    chdir: "/usr/share/nginx/mautic-{{ mautic_version }}"
+    creates: "/usr/share/nginx/mautic-{{ mautic_version }}/vendor/autoload.php"
+  ignore_errors: yes
+
+- name: modify directory permission
+  file:
+    path: "/usr/share/nginx/mautic-{{ mautic_version }}"
+    state: directory
+    owner: nginx
+    group: nginx
+    recurse: yes
+
+- include: mysql.yml
+- include: php5-fpm.yml
+- include: nginx.yml

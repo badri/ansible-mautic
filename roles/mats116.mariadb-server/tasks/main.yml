@@ -1,0 +1,54 @@
+- name: modify apt-key
+  apt_key: 
+    url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcbcb082a1bb943db'
+
+- name: modify repository
+  apt_repository:
+    repo: "{{ item }}"
+  with_items:
+    - "deb http://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/repo/{{ '.'.join(mariadb_version.split('.')[0:2]) }}/ubuntu trusty main"
+    - "deb-src http://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/repo/{{ '.'.join(mariadb_version.split('.')[0:2]) }}/ubuntu trusty main"
+
+- name: install
+  apt:
+    name: "{{ item }}"
+    state: present
+    force: yes
+  with_items:
+    - python-mysqldb
+    - "mariadb-server={{ mariadb_version }}*"
+    - "mariadb-common={{ mariadb_version }}*"
+    - "mariadb-client={{ mariadb_version }}*"
+
+- name: modify my.cnf
+  template:
+    src: mysql/my.cnf
+    dest: /etc/mysql/my.cnf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: mariadb-server is enabled
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: modify logrotate conf
+  template:
+    src: logrotate
+    dest: /etc/logrotate.d/mysql-server
+    owner: root
+    group: root
+    mode: 0644
+
+- name: modify root password
+  mysql_user:
+    name: root
+    password: "{{ mariadb_root_password }}"
+
+- name: modify ~/.my.cnf
+  template:
+    src: my.cnf
+    dest: ~/.my.cnf
+    mode: 0600

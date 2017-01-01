@@ -1,0 +1,8 @@
+- name: modify php5-fpm config
+  template:
+    src: php5-fpm/mautic.conf
+    dest: /etc/php/5.6/fpm/pool.d/mautic.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php5-fpm

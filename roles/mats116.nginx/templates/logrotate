@@ -1,0 +1,12 @@
+{{ nginx_logrotate_file }} {
+        daily
+        missingok
+        rotate {{ nginx_logrotate_period }}
+        compress
+        notifempty
+        create 644 nginx adm
+        sharedscripts
+        postrotate
+                [ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`
+        endscript
+}

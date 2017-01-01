@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: False
+  
+  roles:
+    - role: mats116.mautic
+      mautic_version: "2.4.0"
+      mautic_mysql_user: "mysql_user_name"
+      mautic_mysql_password: "superS3cr3+"
+      composer_github_token: XXXX
+      # PHP stuff
+      memory_limit: 512M
+      # Data Handling
+      post_max_size: 20M
+      always_populate_raw_post_data: -1
+      
+      # Module Settings
+      date_timezone: Asia/Kolkata
+

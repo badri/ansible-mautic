@@ -1,0 +1,2 @@
+composer_install_dir: /usr/local/composer
+composer_bin_location: /usr/local/bin/composer

@@ -1,0 +1,8 @@
+mautic_version: "1.2.2"
+
+mautic_nginx_accesslog: /var/log/nginx/mautic-access.log
+
+mautic_mysql_host: localhost
+mautic_mysql_database: mautic
+mautic_mysql_user: nginx
+mautic_mysql_password: mautic

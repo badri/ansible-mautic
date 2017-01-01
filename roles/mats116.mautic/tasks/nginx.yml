@@ -1,0 +1,8 @@
+- name: modify nginx config
+  template:
+    src: nginx/mautic.conf
+    dest: /etc/nginx/conf.d/mautic.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx

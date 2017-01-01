@@ -1,0 +1,18 @@
+galaxy_info:
+  author: mats116
+  description: "Mautic installer"
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+  galaxy_tags:
+    - mautic
+dependencies:
+  - role: mats116.composer
+  - role: mats116.nginx
+  - role: mats116.php5-fpm
+    php_version: 5.6
+  - role: mats116.mariadb-server
+    when: "mautic_mysql_host == 'localhost'"
